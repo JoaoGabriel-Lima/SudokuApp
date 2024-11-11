@@ -36,6 +36,16 @@ class _SudokuGamePageState extends State<SudokuGamePage> {
   late List<Tuple2<int, int>> vazios;
   late List<int> quadradoSelecionado;
 
+  List<List<int>> changeMatrix(int value) {
+    int pos1 = quadradoSelecionado[0];
+    int pos2 = quadradoSelecionado[1];
+    if (!vazios.contains(Tuple2(pos1, pos2))) return matrix;
+    setState(() {
+      matrix[pos1][pos2] = value;
+    });
+    return matrix;
+  }
+
   @override
   void initState() {
     quadradoSelecionado = [-1, -1];
@@ -183,52 +193,73 @@ class _SudokuGamePageState extends State<SudokuGamePage> {
                 runSpacing: 10,
                 children: [
                   FilledButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        changeMatrix(1);
+                      },
                       child: Text(
                         "1",
                       )),
                   FilledButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        changeMatrix(2);
+                      },
                       child: Text(
                         "2",
                       )),
                   FilledButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        changeMatrix(3);
+                      },
                       child: Text(
                         "3",
                       )),
                   FilledButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        changeMatrix(4);
+                      },
                       child: Text(
                         "4",
                       )),
                   FilledButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        changeMatrix(5);
+                      },
                       child: Text(
                         "5",
                       )),
                   FilledButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        changeMatrix(6);
+                      },
                       child: Text(
                         "6",
                       )),
                   FilledButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        changeMatrix(7);
+                      },
                       child: Text(
                         "7",
                       )),
                   FilledButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        changeMatrix(8);
+                      },
                       child: Text(
                         "8",
                       )),
                   FilledButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        changeMatrix(9);
+                      },
                       child: Text(
                         "9",
                       )),
                   OutlinedButton(
-                      onPressed: () {}, child: const Icon(Icons.clear_rounded)),
+                      onPressed: () {
+                        changeMatrix(-1);
+                      },
+                      child: const Icon(Icons.clear_rounded)),
                 ],
               ),
               SizedBox(height: 20),
