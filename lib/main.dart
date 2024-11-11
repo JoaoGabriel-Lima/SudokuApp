@@ -42,7 +42,7 @@ class _RootPageState extends State<RootPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('João Sudoku'),
+        title: const Text('Marinho Sudoku'),
         shadowColor: Colors.black,
         // backgroundColor: Colors.blue,
       ),

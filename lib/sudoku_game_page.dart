@@ -1,31 +1,92 @@
 import 'package:flutter/material.dart';
 import 'package:sudoku_dart/sudoku_dart.dart';
+import 'package:tuple/tuple.dart';
 
 class SudokuGamePage extends StatefulWidget {
-  const SudokuGamePage({super.key, this.dificuldadeSelecionada = "easy"});
+  const SudokuGamePage(
+      {super.key,
+      this.dificuldadeSelecionada = "easy",
+      required this.playerName});
   final String dificuldadeSelecionada;
+  final String playerName;
 
   @override
   State<SudokuGamePage> createState() => _SudokuGamePageState();
 }
 
 class _SudokuGamePageState extends State<SudokuGamePage> {
-  Sudoku sudoku = Sudoku.generate(Level.easy);
+  Level getLevel() {
+    switch (widget.dificuldadeSelecionada) {
+      case "easy":
+        return Level.easy;
+      case "medium":
+        return Level.medium;
+      case "hard":
+        return Level.hard;
+      case "expert":
+        return Level.expert;
+      default:
+        return Level.easy;
+    }
+  }
+
+  late Level level;
+
+  late List<List<int>> matrix;
+  late List<Tuple2<int, int>> vazios;
+  late List<int> quadradoSelecionado;
+
+  @override
+  void initState() {
+    quadradoSelecionado = [-1, -1];
+
+    level = getLevel();
+    Sudoku sudoku = Sudoku.generate(level);
+
+    matrix = List.generate(
+        9, (i) => List.generate(9, (j) => sudoku.puzzle[i * 9 + j]));
+    vazios = [];
+    for (int i = 0; i < 9; i++) {
+      for (int j = 0; j < 9; j++) {
+        if (matrix[i][j] == -1) {
+          vazios.add(Tuple2(i, j));
+        }
+      }
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    sudoku.debug();
-    // sudoku.puzzle is a int array with 81 elements (9x9), transform into a matrix with 3x3 sub-matrix
-    List<List<int>> matrix = List.generate(
-        9, (i) => List.generate(9, (j) => sudoku.puzzle[i * 9 + j]));
-    print(matrix);
-
     return Center(
       child: Column(
         children: [
-          Text("Dificuldade: ${widget.dificuldadeSelecionada}"),
+          Container(
+              padding: const EdgeInsets.fromLTRB(12, 15, 12, 15),
+              margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+              alignment: Alignment.center,
+              color: Colors.grey.shade200,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Dificuldade: ${widget.dificuldadeSelecionada}",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    "Jogador: ${widget.playerName}",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              )),
           ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 600),
+            constraints: BoxConstraints(maxWidth: 500),
             child: Container(
                 padding: const EdgeInsets.all(4),
                 margin: EdgeInsets.all(0),
@@ -57,16 +118,34 @@ class _SudokuGamePageState extends State<SudokuGamePage> {
                           ),
                           physics: ScrollPhysics(),
                           itemBuilder: (BuildContext, numero) {
-                            return Container(
-                              color: Colors.white,
-                              alignment: Alignment.center,
-                              child: Text(
-                                matrix[quadrante][numero] == -1
-                                    ? ""
-                                    : matrix[quadrante][numero].toString(),
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                            return InkWell(
+                              mouseCursor:
+                                  vazios.contains(Tuple2(quadrante, numero))
+                                      ? SystemMouseCursors.click
+                                      : SystemMouseCursors.basic,
+                              onTap: () => {
+                                print("Quadrante: $quadrante, Número: $numero"),
+                                setState(() {
+                                  if (vazios
+                                      .contains(Tuple2(quadrante, numero))) {
+                                    quadradoSelecionado = [quadrante, numero];
+                                  }
+                                })
+                              },
+                              child: Container(
+                                color: quadradoSelecionado[0] == quadrante &&
+                                        quadradoSelecionado[1] == numero
+                                    ? Colors.pink.shade100
+                                    : Colors.white,
+                                alignment: Alignment.center,
+                                child: Text(
+                                  matrix[quadrante][numero] == -1
+                                      ? ""
+                                      : matrix[quadrante][numero].toString(),
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             );

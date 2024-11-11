@@ -27,14 +27,18 @@ class SudokuGameMain extends StatelessWidget {
 }
 
 class GameRootPage extends StatefulWidget {
-  const GameRootPage({super.key, this.difficulty = "easy"});
+  const GameRootPage(
+      {super.key, this.difficulty = "easy", this.playerName = "Jogador 1"});
   final String difficulty;
+  final String playerName;
 
   @override
   State<GameRootPage> createState() => _GameRootPageState();
 }
 
 class _GameRootPageState extends State<GameRootPage> {
+  get playerName => widget.playerName;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +62,7 @@ class _GameRootPageState extends State<GameRootPage> {
       ),
       body: SudokuGamePage(
         dificuldadeSelecionada: widget.difficulty,
+        playerName: playerName,
       ),
     );
   }

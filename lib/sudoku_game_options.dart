@@ -10,6 +10,7 @@ class SudokuGameOptions extends StatefulWidget {
 
 class _SudokuGameOptionsState extends State<SudokuGameOptions> {
   String difficulty = "easy";
+  TextEditingController nameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -19,32 +20,33 @@ class _SudokuGameOptionsState extends State<SudokuGameOptions> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          const Text('Bem-vindo ao João Sudoku!',
+          const Text('Bem-vindo ao Marinho Sudoku!',
               style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: Colors.pink),
               textAlign: TextAlign.center),
-          const Padding(
+          Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                Text(
+                const Text(
                   'Escolha seu nome:',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 TextField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.black)),
                     enabledBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.black)),
                     labelText: 'Nome',
                   ),
+                  controller: nameController,
                 ),
               ],
             ),
@@ -68,7 +70,7 @@ class _SudokuGameOptionsState extends State<SudokuGameOptions> {
                   });
                 },
                 title: const Text('Fácil'),
-                subtitle: const Text('Jogo padrão do Sudoku com 4x4'),
+                subtitle: const Text('Jogo padrão do Sudoku Fácil'),
               ),
               RadioListTile(
                 value: "medium",
@@ -79,7 +81,7 @@ class _SudokuGameOptionsState extends State<SudokuGameOptions> {
                   });
                 },
                 title: const Text('Médio'),
-                subtitle: const Text('Jogo padrão do Sudoku com 9x9'),
+                subtitle: const Text('Jogo padrão do Sudoku Médio'),
               ),
               RadioListTile(
                 value: "hard",
@@ -90,7 +92,7 @@ class _SudokuGameOptionsState extends State<SudokuGameOptions> {
                   });
                 },
                 title: const Text('Difícil'),
-                subtitle: const Text('Jogo padrão do Sudoku com 16x16'),
+                subtitle: const Text('Jogo padrão do Sudoku Difícil'),
               ),
               RadioListTile(
                 value: "expert",
@@ -101,7 +103,7 @@ class _SudokuGameOptionsState extends State<SudokuGameOptions> {
                   });
                 },
                 title: const Text('Expert'),
-                subtitle: const Text('Jogo padrão do Sudoku com 25x25'),
+                subtitle: const Text('Jogo padrão do Sudoku Expert'),
               ),
             ],
           ),
@@ -113,6 +115,7 @@ class _SudokuGameOptionsState extends State<SudokuGameOptions> {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => GameRootPage(
                               difficulty: difficulty,
+                              playerName: nameController.text,
                             )));
                   },
                   style: ButtonStyle(
