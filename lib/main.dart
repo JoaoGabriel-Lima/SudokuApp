@@ -46,12 +46,6 @@ class _RootPageState extends State<RootPage> {
         shadowColor: Colors.black,
         // backgroundColor: Colors.blue,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          debugPrint('Botão pressionado');
-        },
-        child: const Icon(Icons.play_arrow),
-      ),
       body: const SudokuGameOptions(),
     );
   }

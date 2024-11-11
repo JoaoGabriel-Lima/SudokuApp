@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sudoku/sudoku_game.dart';
 
 class SudokuGameOptions extends StatefulWidget {
   const SudokuGameOptions({super.key});
@@ -108,7 +109,12 @@ class _SudokuGameOptionsState extends State<SudokuGameOptions> {
           Padding(
               padding: const EdgeInsets.all(10),
               child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => GameRootPage(
+                              difficulty: difficulty,
+                            )));
+                  },
                   style: ButtonStyle(
                     backgroundColor: WidgetStateProperty.all(Colors.pink),
                     minimumSize: WidgetStateProperty.all(
