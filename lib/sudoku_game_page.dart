@@ -58,104 +58,183 @@ class _SudokuGamePageState extends State<SudokuGamePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          Container(
-              padding: const EdgeInsets.fromLTRB(12, 15, 12, 15),
-              margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-              alignment: Alignment.center,
-              color: Colors.grey.shade200,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Dificuldade: ${widget.dificuldadeSelecionada}",
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    "Jogador: ${widget.playerName}",
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              )),
-          ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 500),
-            child: Container(
-                padding: const EdgeInsets.all(4),
-                margin: EdgeInsets.all(0),
-                alignment: Alignment.center,
-                child: GridView.builder(
-                  itemCount: 9,
-                  shrinkWrap: true,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 1,
-                    crossAxisSpacing: 2,
-                    mainAxisSpacing: 2,
-                  ),
-                  physics: ScrollPhysics(),
-                  itemBuilder: (BuildContext, quadrante) {
-                    return Container(
-                        padding: const EdgeInsets.all(4),
-                        color: quadrante % 2 == 0 ? Colors.pink : Colors.purple,
-                        alignment: Alignment.center,
-                        child: GridView.builder(
-                          itemCount: 9,
-                          shrinkWrap: true,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            childAspectRatio: 1,
-                            crossAxisSpacing: 3,
-                            mainAxisSpacing: 3,
+    return SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+        child: Center(
+          child: Column(
+            children: [
+              Container(
+                  padding: const EdgeInsets.fromLTRB(12, 15, 12, 15),
+                  margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                  alignment: Alignment.center,
+                  color: Colors.grey.shade200,
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    runAlignment: WrapAlignment.center,
+                    spacing: 20,
+                    runSpacing: 10,
+                    children: [
+                      Container(
+                        child: Text(
+                          "Dificuldade: ${widget.dificuldadeSelecionada}",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
                           ),
-                          physics: ScrollPhysics(),
-                          itemBuilder: (BuildContext, numero) {
-                            return InkWell(
-                              mouseCursor:
-                                  vazios.contains(Tuple2(quadrante, numero))
-                                      ? SystemMouseCursors.click
-                                      : SystemMouseCursors.basic,
-                              onTap: () => {
-                                print("Quadrante: $quadrante, Número: $numero"),
-                                setState(() {
-                                  if (vazios
-                                      .contains(Tuple2(quadrante, numero))) {
-                                    quadradoSelecionado = [quadrante, numero];
-                                  }
-                                })
-                              },
-                              child: Container(
-                                color: quadradoSelecionado[0] == quadrante &&
-                                        quadradoSelecionado[1] == numero
-                                    ? Colors.pink.shade100
-                                    : Colors.white,
-                                alignment: Alignment.center,
-                                child: Text(
-                                  matrix[quadrante][numero] == -1
-                                      ? ""
-                                      : matrix[quadrante][numero].toString(),
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                        ),
+                      ),
+                      Container(
+                        child: Text(
+                          "Jogador: ${widget.playerName == "" ? "Anônimo" : widget.playerName}",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      )
+                    ],
+                  )),
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 500),
+                child: Container(
+                    padding: const EdgeInsets.all(4),
+                    margin: EdgeInsets.all(0),
+                    alignment: Alignment.center,
+                    child: GridView.builder(
+                      itemCount: 9,
+                      shrinkWrap: true,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        childAspectRatio: 1,
+                        crossAxisSpacing: 2,
+                        mainAxisSpacing: 2,
+                      ),
+                      physics: ScrollPhysics(),
+                      itemBuilder: (BuildContext, quadrante) {
+                        return Container(
+                            padding: const EdgeInsets.all(4),
+                            color: quadrante % 2 == 0
+                                ? Colors.pink
+                                : Colors.purple,
+                            alignment: Alignment.center,
+                            child: GridView.builder(
+                              itemCount: 9,
+                              shrinkWrap: true,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                childAspectRatio: 1,
+                                crossAxisSpacing: 3,
+                                mainAxisSpacing: 3,
                               ),
-                            );
-                          },
-                        ));
-                  },
-                )),
-          )
-        ],
-      ),
-    );
+                              physics: ScrollPhysics(),
+                              itemBuilder: (BuildContext, numero) {
+                                return InkWell(
+                                  mouseCursor:
+                                      vazios.contains(Tuple2(quadrante, numero))
+                                          ? SystemMouseCursors.click
+                                          : SystemMouseCursors.basic,
+                                  onTap: () => {
+                                    print(
+                                        "Quadrante: $quadrante, Número: $numero"),
+                                    setState(() {
+                                      if (vazios.contains(
+                                          Tuple2(quadrante, numero))) {
+                                        quadradoSelecionado = [
+                                          quadrante,
+                                          numero
+                                        ];
+                                      }
+                                    })
+                                  },
+                                  child: Container(
+                                    color:
+                                        quadradoSelecionado[0] == quadrante &&
+                                                quadradoSelecionado[1] == numero
+                                            ? Colors.pink.shade100
+                                            : vazios.contains(
+                                                    Tuple2(quadrante, numero))
+                                                ? Colors.white
+                                                : Colors.grey.shade200,
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      matrix[quadrante][numero] == -1
+                                          ? ""
+                                          : matrix[quadrante][numero]
+                                              .toString(),
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ));
+                      },
+                    )),
+              ),
+              SizedBox(height: 20),
+              Wrap(
+                direction: Axis.horizontal,
+                alignment: WrapAlignment.center,
+                runAlignment: WrapAlignment.center,
+                spacing: 10,
+                runSpacing: 10,
+                children: [
+                  FilledButton(
+                      onPressed: () {},
+                      child: Text(
+                        "1",
+                      )),
+                  FilledButton(
+                      onPressed: () {},
+                      child: Text(
+                        "2",
+                      )),
+                  FilledButton(
+                      onPressed: () {},
+                      child: Text(
+                        "3",
+                      )),
+                  FilledButton(
+                      onPressed: () {},
+                      child: Text(
+                        "4",
+                      )),
+                  FilledButton(
+                      onPressed: () {},
+                      child: Text(
+                        "5",
+                      )),
+                  FilledButton(
+                      onPressed: () {},
+                      child: Text(
+                        "6",
+                      )),
+                  FilledButton(
+                      onPressed: () {},
+                      child: Text(
+                        "7",
+                      )),
+                  FilledButton(
+                      onPressed: () {},
+                      child: Text(
+                        "8",
+                      )),
+                  FilledButton(
+                      onPressed: () {},
+                      child: Text(
+                        "9",
+                      )),
+                  OutlinedButton(
+                      onPressed: () {}, child: const Icon(Icons.clear_rounded)),
+                ],
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(onPressed: () {}, child: Text("Novo Jogo")),
+            ],
+          ),
+        ));
   }
 }

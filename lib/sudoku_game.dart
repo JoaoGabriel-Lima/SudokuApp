@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:sudoku/sudoku_game_page.dart';
 
 class SudokuGameMain extends StatelessWidget {
-  const SudokuGameMain({super.key, this.difficulty = "easy"});
+  const SudokuGameMain(
+      {super.key, this.difficulty = "easy", this.playerName = "Jogador 1"});
   final String difficulty;
+  final String playerName;
 
   get dificuldade => difficulty;
+  get nomeJogador => playerName;
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +17,7 @@ class SudokuGameMain extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: GameRootPage(
         difficulty: dificuldade,
+        playerName: nomeJogador,
       ),
       theme: ThemeData(
           primaryColor: Colors.pink,
@@ -54,12 +58,12 @@ class _GameRootPageState extends State<GameRootPage> {
         shadowColor: Colors.black,
         // backgroundColor: Colors.blue,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          debugPrint('Botão pressionado');
-        },
-        child: const Icon(Icons.pause),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     debugPrint('Botão pressionado');
+      //   },
+      //   child: const Icon(Icons.pause),
+      // ),
       body: SudokuGamePage(
         dificuldadeSelecionada: widget.difficulty,
         playerName: playerName,
