@@ -1,11 +1,23 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sudoku/sudoku_game_options.dart';
 // import 'package:sudoku/sudoku_game_options.dart';
 
 Future main() async {
-  sqfliteFfiInit();
-  databaseFactory = databaseFactoryFfi;
+  if (kIsWeb) {
+    // Use web implementation on the web.
+    databaseFactory = databaseFactoryFfiWeb;
+  } else {
+    // Use ffi on Linux and Windows.
+    if (Platform.isLinux || Platform.isWindows) {
+      databaseFactory = databaseFactoryFfi;
+      sqfliteFfiInit();
+    }
+  }
   runApp(const MyApp());
 }
 

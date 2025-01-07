@@ -13,6 +13,8 @@ class _MyGamesState extends State<MyGames> {
   final DatabaseService databaseService = DatabaseService.instance;
   int _difficulty = -1;
   List<Partida> _partidas = [];
+  Future<List<Partida>> _partidasFuture =
+      DatabaseService.instance.buscarPartidas(dificuldade: -1);
 
   void initState() {
     super.initState();
@@ -21,12 +23,22 @@ class _MyGamesState extends State<MyGames> {
     });
   }
 
-  _buscarPartidas() async {
-    List<Partida> dados = await databaseService.buscarPartidas();
+  _buscarPartidas({int dificuldadeFiltro = -1}) async {
+    List<Partida> dados =
+        await databaseService.buscarPartidas(dificuldade: dificuldadeFiltro);
     setState(() {
       _partidas = dados;
+      _partidasFuture =
+          databaseService.buscarPartidas(dificuldade: dificuldadeFiltro);
     });
   }
+
+  final difficultyMap = {
+    0: "Fácil",
+    1: "Médio",
+    2: "Difícil",
+    3: "Expert",
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +54,7 @@ class _MyGamesState extends State<MyGames> {
         ),
         shadowColor: Colors.black,
       ),
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
         child: Center(
           child: Column(
@@ -86,12 +98,9 @@ class _MyGamesState extends State<MyGames> {
                       ),
                     ],
                     onChanged: (value) async {
-                      List<Partida> dados = await databaseService
-                          .buscarPartidas(dificuldade: _difficulty);
                       setState(() {
-                        _difficulty = value!;
-                        _partidas = dados;
-                        // fetch the games from the database
+                        _difficulty = value ?? -1;
+                        _buscarPartidas(dificuldadeFiltro: value ?? -1);
                       });
                     },
                   ),
@@ -112,17 +121,22 @@ class _MyGamesState extends State<MyGames> {
                     ],
                   ),
                   FutureBuilder(
-                      future: databaseService.buscarPartidas(),
+                      future: _partidasFuture,
                       builder: (context, snapshot) {
                         return ListView.builder(
+                          shrinkWrap: true,
                           itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text(_partidas[index].name),
-                              subtitle: Text(_partidas[index].date),
-                              trailing: Text(_partidas[index].level.toString()),
-                            );
+                            return Card(
+                                child: ListTile(
+                              title: Text(
+                                  "Jogador: ${snapshot.data![index].name} | Dificuldade: ${difficultyMap[snapshot.data![index].level]}"),
+                              subtitle: Text(snapshot.data![index].date),
+                              trailing: Text(snapshot.data![index].result == 1
+                                  ? 'Vitória'
+                                  : 'Derrota'),
+                            ));
                           },
-                          itemCount: _partidas.length,
+                          itemCount: snapshot.data?.length ?? 0,
                         );
                       })
                 ],
