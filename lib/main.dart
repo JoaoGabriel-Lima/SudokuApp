@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sudoku/sudoku_game_options.dart';
 // import 'package:sudoku/sudoku_game_options.dart';
 
-void main() {
+Future main() async {
+  sqfliteFfiInit();
+  databaseFactory = databaseFactoryFfi;
   runApp(const MyApp());
 }
 

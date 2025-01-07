@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sudoku/mygames.dart';
 import 'package:sudoku/sudoku_game.dart';
 
 class SudokuGameOptions extends StatefulWidget {
@@ -133,7 +134,26 @@ class _SudokuGameOptionsState extends State<SudokuGameOptions> {
                             'Iniciar jogo',
                             textAlign: TextAlign.center,
                             style: TextStyle(fontSize: 15, color: Colors.white),
-                          )))
+                          ))),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: FilledButton(
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => MyGames(
+                                    // difficulty: difficulty,
+                                    // playerName: nameController.text,
+                                    )));
+                          },
+                          style: FilledButton.styleFrom(
+                            // backgroundColor: Colors.pink,
+                            minimumSize: const Size(double.infinity, 50),
+                          ),
+                          child: const Text(
+                            'Ver minhas partidas passadas',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 15, color: Colors.white),
+                          ))),
                 ],
               ),
             )));

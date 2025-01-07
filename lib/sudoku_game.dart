@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sudoku/models/partida.dart';
+import 'package:sudoku/services/database_service.dart';
 import 'package:sudoku/sudoku_game_page.dart';
 
 class SudokuGameMain extends StatelessWidget {
@@ -43,11 +45,39 @@ class GameRootPage extends StatefulWidget {
 class _GameRootPageState extends State<GameRootPage> {
   get playerName => widget.playerName;
 
+  final DatabaseService databaseService = DatabaseService.instance;
+  int? partidaId;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _createPartida();
+    });
+  }
+
+  _createPartida() async {
+    final difficultyMap = {
+      "easy": 0,
+      "medium": 1,
+      "hard": 2,
+      "expert": 3,
+    };
+
+    Partida partidaCriada = await databaseService.criarPartida(
+        widget.playerName, difficultyMap[widget.difficulty]!);
+
+    setState(() {
+      partidaId = partidaCriada.id;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Jogo Sudoku'),
+        title:
+            Text('Jogo Sudoku ${partidaId != null ? '(ID: $partidaId)' : ''}'),
         automaticallyImplyLeading: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
@@ -56,17 +86,11 @@ class _GameRootPageState extends State<GameRootPage> {
           },
         ),
         shadowColor: Colors.black,
-        // backgroundColor: Colors.blue,
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     debugPrint('Botão pressionado');
-      //   },
-      //   child: const Icon(Icons.pause),
-      // ),
       body: SudokuGamePage(
         dificuldadeSelecionada: widget.difficulty,
         playerName: playerName,
+        partidaId: partidaId,
       ),
     );
   }

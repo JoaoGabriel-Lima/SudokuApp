@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sudoku/main.dart';
+import 'package:sudoku/services/database_service.dart';
 import 'package:sudoku_dart/sudoku_dart.dart';
 import 'package:tuple/tuple.dart';
 
@@ -7,15 +8,19 @@ class SudokuGamePage extends StatefulWidget {
   const SudokuGamePage(
       {super.key,
       this.dificuldadeSelecionada = "easy",
-      required this.playerName});
+      required this.playerName,
+      this.partidaId});
   final String dificuldadeSelecionada;
   final String playerName;
+  final int? partidaId;
 
   @override
   State<SudokuGamePage> createState() => _SudokuGamePageState();
 }
 
 class _SudokuGamePageState extends State<SudokuGamePage> {
+  final DatabaseService databaseService = DatabaseService.instance;
+
   Level getLevel() {
     switch (widget.dificuldadeSelecionada) {
       case "easy":
@@ -121,6 +126,7 @@ class _SudokuGamePageState extends State<SudokuGamePage> {
         }
       }
     }
+    databaseService.atualizarResultadoPartida(widget.partidaId!, 1);
     return true;
   }
 
